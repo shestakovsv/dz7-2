@@ -30,13 +30,12 @@ echo '<br>';
 //расчет скидки
 foreach($bd as $z=> $name_p)
     {
-    if ($z=='игрушка детская велосипед'){
+    if ($z=='игрушка детская велосипед'){ // расчет скидки для велосипедов
         if ($name_p['количество заказано']>2){
             $bd['игрушка детская велосипед']['цена']=$bd['игрушка детская велосипед']['цена']*0.7;
-//            echo "на "."игрушка детская велосипед"." предоставляется скидка 30%, скидка учтена в сумме покупок"."<br>";  
             $bd["$z"]['diskont']= 'скидка 30%';
         }else { 
-            while(list($key,$value) = each($name_p)){
+            while(list($key,$value) = each($name_p)){   
                 if ($value=="diskont1"){
                     $name_p['цена']= $name_p['цена']*0.9;
                     $bd["$z"]['цена']=$name_p['цена'];
@@ -52,7 +51,7 @@ foreach($bd as $z=> $name_p)
                 }
             }
         }   
-    }   else{  while(list($key,$value) = each($name_p)){
+    }   else{  while(list($key,$value) = each($name_p)){  // расчет скидки для всего остального
                 if ($value=="diskont1"){
                     $name_p['цена']= $name_p['цена']*0.9;
                     $bd["$z"]['цена']=$name_p['цена'];
@@ -69,7 +68,7 @@ foreach($bd as $z=> $name_p)
             }
         }
 }
-echo "<br>"."<table>";
+echo "<br>"."<table>";        // вывод таблички заказов по найденому в инете скрипту
 foreach($bd as $x => $name)
 {
     echo '<tr align="center"><td style="background-color:#CCC;" colspan="2">'.$x.'</td>';
@@ -84,7 +83,7 @@ echo "</table";
 
 // ИТОГО
 
-$pz=0; //всего позиций заказанно
+$pz=0; //всего позиций заказанно  
 foreach($bd as $x => $name1)
 {
     if ((in_array("количество заказано",$name1, TRUE))>0);
@@ -96,7 +95,7 @@ foreach($bd as $x => $name1)
   
   
   
-$okp=0; //общее колличество позиций
+$okp=0; //общее колличество позиций шт
 foreach($bd as $z => $name_p)
 {
     while(list($key,$value) = each($name_p))
@@ -106,7 +105,7 @@ foreach($bd as $z => $name_p)
         }
     }
   }   
-  echo "<br>"."всего заказанно : "."$okp";
+  echo "<br>"."всего заказанно : "."$okp шт.";
   
   
 $osz=0; //общая сумма заказа
@@ -127,7 +126,7 @@ foreach($bd as $z => $name_p){
   
   $ons=0;
   $kzb=0;
-//УВЕДОМЛЕНИЯ
+//УВЕДОМЛЕНИЯ о недеостающих заказах на складе
 foreach($bd as $z=> $name_p)
     {
     while(list($key,$value) = each($name_p)){
