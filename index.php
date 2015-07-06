@@ -3,20 +3,12 @@
 error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
 ini_set('display_errors', 1);
 header('Content-type: text/html; charset=utf-8');
-
 //session_start();
 //print_r($_COOKIE["Announcements"]);
 //$Announcements=array();
-//echo "<br>";
-print_r($_POST);
-//
-//
-function rewrite_cookie() {
-    $ads_line = serialize($Announcements);
-    setcookie('Announcements', $ads_line);  //, time() + 3600 * 24 * 7);
-}
-
-//
+echo basename($_SERVER['PHP_SELF']);
+echo "<br>";
+//print_r($_POST);
 //добавленых объявления в массив ссесий
 if ($_POST == TRUE) {
     if ($_GET == TRUE) {
@@ -25,16 +17,14 @@ if ($_POST == TRUE) {
                 $id = $_GET['id'];
                 $Announcements = unserialize($_COOKIE["Announcements"]);
                 $Announcements['adv'][$id] = $_POST;
-                $ads_line = serialize($Announcements);
-                setcookie('Announcements', $ads_line);
-                $ads_line = serialize($Announcements);
-                setcookie('Announcements', $ads_line);
-                rewrite_cookie();
+                $B = serialize($Announcements);
+                setcookie('Announcements', $B, time() + 3600 * 24 * 7);
                 $_GET['id'] = "";
             } else {
                 $Announcements = unserialize($_COOKIE["Announcements"]);
                 $Announcements['adv'][] = $_POST;
-                rewrite_cookie();
+                $B = serialize($Announcements);
+                setcookie('Announcements', $B, time() + 3600 * 24 * 7);
             }
         }
         unset($_GET['id']);
@@ -42,17 +32,16 @@ if ($_POST == TRUE) {
         if (isset($_COOKIE['Announcements'])) {
             $Announcements = unserialize($_COOKIE['Announcements']);
             $Announcements['adv'][] = $_POST;
-            $ads_line = serialize($Announcements);
-            setcookie('Announcements', $ads_line);
-            rewrite_cookie();
+            $B = serialize($Announcements);
+            setcookie('Announcements', $B, time() + 3600 * 24 * 7);
         } else {
             $Announcements['adv'][] = $_POST;
-            $ads_line = serialize($Announcements);
-            setcookie('Announcements', $ads_line);
-            rewrite_cookie();
+            $B = serialize($Announcements);
+            setcookie('Announcements', $B, time() + 3600 * 24 * 7);
         }
     }
-    header("Location: index.php");
+    $Location = basename($_SERVER['PHP_SELF']);
+    header("Location: $Location");
     exit;
 }
 
@@ -67,12 +56,12 @@ if ($_GET == TRUE) {
             $id_del = $_GET['id_del'];
             $Announcements = unserialize($_COOKIE["Announcements"]);
             unset($Announcements['adv'][$id_del]);
-            $ads_line = serialize($Announcements);
-            setcookie('Announcements', $ads_line);
-            //rewrite_cookie();
+            $B = serialize($Announcements);
+            setcookie('Announcements', $B, time() + 3600 * 24 * 7);
             unset($id_del);
             $id_key = "";
-            header("Location: index.php");
+            $Location = basename($_SERVER['PHP_SELF']);
+            header("Location: $Location");
             exit;
         }
     }
@@ -80,12 +69,9 @@ if ($_GET == TRUE) {
     $id_key = ""; // пока нет данных выводим пустую форму
 }
 
-//function rewrite_cookie() {
-//    $ads_line = serialize($Announcements);
-//    setcookie('Announcements', $ads_line);  //, time() + 3600 * 24 * 7);
-//}
 
-global $id_key;
+
+//global $id_key;
 
 if ($id_key == null) {
     $seller_name = "";
@@ -151,17 +137,17 @@ if ($id_key == null) {
 <?php
 if (isset($_COOKIE['Announcements'])) {
     $Announcements = unserialize($_COOKIE["Announcements"]);
-    var_dump($Announcements);
     foreach ($Announcements['adv'] as $x => $value) {
         ?>
-        <a href="index.php?id=<?php echo $x; ?>"><?php echo $Announcements['adv'][$x]['title']; ?></a>
+        <a href="<?php echo basename($_SERVER['PHP_SELF']); ?>?id=<?php echo $x; ?>"><?php echo $Announcements['adv'][$x]['title']; ?></a>
         <?php
         echo '|  Цена:' . $Announcements['adv'][$x]['price'] . ' руб.  |';
         echo $Announcements['adv'][$x]['seller_name'] . '  |';
         ?>
-        <a href="index.php?id_del=<?php echo $x; ?>">Удалить</a>
+        <a href="<?php echo basename($_SERVER['PHP_SELF']); ?>?id_del=<?php echo $x; ?>">Удалить</a>        
         <?php
         echo "<br>";
     }
 }
+
 
