@@ -3,14 +3,20 @@
 error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
 ini_set('display_errors', 1);
 header('Content-type: text/html; charset=utf-8');
+
 //session_start();
 //print_r($_COOKIE["Announcements"]);
 //$Announcements=array();
 //echo "<br>";
-//print_r($_POST);
+print_r($_POST);
+//
+//
+function rewrite_cookie() {
+    $ads_line = serialize($Announcements);
+    setcookie('Announcements', $ads_line);  //, time() + 3600 * 24 * 7);
+}
 
-
-
+//
 //добавленых объявления в массив ссесий
 if ($_POST == TRUE) {
     if ($_GET == TRUE) {
@@ -19,14 +25,16 @@ if ($_POST == TRUE) {
                 $id = $_GET['id'];
                 $Announcements = unserialize($_COOKIE["Announcements"]);
                 $Announcements['adv'][$id] = $_POST;
-                $B = serialize($Announcements);
-                setcookie('Announcements', $B,time()+3600*24*7);
+                $ads_line = serialize($Announcements);
+                setcookie('Announcements', $ads_line);
+                $ads_line = serialize($Announcements);
+                setcookie('Announcements', $ads_line);
+                rewrite_cookie();
                 $_GET['id'] = "";
             } else {
                 $Announcements = unserialize($_COOKIE["Announcements"]);
                 $Announcements['adv'][] = $_POST;
-                $B = serialize($Announcements);
-                setcookie('Announcements', $B,time()+3600*24*7);
+                rewrite_cookie();
             }
         }
         unset($_GET['id']);
@@ -34,12 +42,14 @@ if ($_POST == TRUE) {
         if (isset($_COOKIE['Announcements'])) {
             $Announcements = unserialize($_COOKIE['Announcements']);
             $Announcements['adv'][] = $_POST;
-            $B = serialize($Announcements);
-            setcookie('Announcements', $B,time()+3600*24*7);            
+            $ads_line = serialize($Announcements);
+            setcookie('Announcements', $ads_line);
+            rewrite_cookie();
         } else {
             $Announcements['adv'][] = $_POST;
-            $B = serialize($Announcements);
-            setcookie('Announcements', $B,time()+3600*24*7);            
+            $ads_line = serialize($Announcements);
+            setcookie('Announcements', $ads_line);
+            rewrite_cookie();
         }
     }
     header("Location: index.php");
@@ -57,8 +67,9 @@ if ($_GET == TRUE) {
             $id_del = $_GET['id_del'];
             $Announcements = unserialize($_COOKIE["Announcements"]);
             unset($Announcements['adv'][$id_del]);
-            $B = serialize($Announcements);
-            setcookie('Announcements', $B,time()+3600*24*7);
+            $ads_line = serialize($Announcements);
+            setcookie('Announcements', $ads_line);
+            //rewrite_cookie();
             unset($id_del);
             $id_key = "";
             header("Location: index.php");
@@ -69,7 +80,10 @@ if ($_GET == TRUE) {
     $id_key = ""; // пока нет данных выводим пустую форму
 }
 
-
+//function rewrite_cookie() {
+//    $ads_line = serialize($Announcements);
+//    setcookie('Announcements', $ads_line);  //, time() + 3600 * 24 * 7);
+//}
 
 global $id_key;
 
@@ -88,7 +102,7 @@ if ($id_key == null) {
     $email = $Announcements['adv'][$id_key]['email'];
     $phone = $Announcements['adv'][$id_key]['phone'];
     $location_id = $Announcements['adv'][$id_key]['location_id'];
-    $category_id = $Announcements[$id_key]['category_id'];
+    $category_id = $Announcements['adv'][$id_key]['category_id'];
     $title = $Announcements['adv'][$id_key]['title'];
     $description = $Announcements['adv'][$id_key]['description'];
     $price = $Announcements['adv'][$id_key]['price'];
@@ -137,6 +151,7 @@ if ($id_key == null) {
 <?php
 if (isset($_COOKIE['Announcements'])) {
     $Announcements = unserialize($_COOKIE["Announcements"]);
+    var_dump($Announcements);
     foreach ($Announcements['adv'] as $x => $value) {
         ?>
         <a href="index.php?id=<?php echo $x; ?>"><?php echo $Announcements['adv'][$x]['title']; ?></a>
