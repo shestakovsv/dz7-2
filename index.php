@@ -83,7 +83,7 @@ if ($id_key == null) {
     $phone = "";
     $location_id = "Выберите Ваш город";
     $category_id = "Выберите категорию";
-    $title = "Название объявления";
+    $title = "";
     $description = "";
     $price = "0";
 } else {
