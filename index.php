@@ -6,9 +6,18 @@ header('Content-type: text/html; charset=utf-8');
 //session_start();
 //print_r($_COOKIE["Announcements"]);
 //$Announcements=array();
-echo basename($_SERVER['PHP_SELF']);
-echo "<br>";
+//echo basename($_SERVER['PHP_SELF']);
+//echo "<br>";
+
 //print_r($_POST);
+//
+function rewriting_cookies($Announcements) {
+    $line_cookie = serialize($Announcements);
+    setcookie('Announcements', $line_cookie, time() + 3600 * 24 * 7);
+}
+
+//
+//
 //добавленых объявления в массив ссесий
 if ($_POST == TRUE) {
     if ($_GET == TRUE) {
@@ -17,14 +26,12 @@ if ($_POST == TRUE) {
                 $id = $_GET['id'];
                 $Announcements = unserialize($_COOKIE["Announcements"]);
                 $Announcements['adv'][$id] = $_POST;
-                $B = serialize($Announcements);
-                setcookie('Announcements', $B, time() + 3600 * 24 * 7);
+                rewriting_cookies($Announcements);
                 $_GET['id'] = "";
             } else {
                 $Announcements = unserialize($_COOKIE["Announcements"]);
                 $Announcements['adv'][] = $_POST;
-                $B = serialize($Announcements);
-                setcookie('Announcements', $B, time() + 3600 * 24 * 7);
+                rewriting_cookies($Announcements);
             }
         }
         unset($_GET['id']);
@@ -32,12 +39,10 @@ if ($_POST == TRUE) {
         if (isset($_COOKIE['Announcements'])) {
             $Announcements = unserialize($_COOKIE['Announcements']);
             $Announcements['adv'][] = $_POST;
-            $B = serialize($Announcements);
-            setcookie('Announcements', $B, time() + 3600 * 24 * 7);
+            rewriting_cookies($Announcements);
         } else {
             $Announcements['adv'][] = $_POST;
-            $B = serialize($Announcements);
-            setcookie('Announcements', $B, time() + 3600 * 24 * 7);
+            rewriting_cookies($Announcements);
         }
     }
     $Location = basename($_SERVER['PHP_SELF']);
@@ -56,8 +61,7 @@ if ($_GET == TRUE) {
             $id_del = $_GET['id_del'];
             $Announcements = unserialize($_COOKIE["Announcements"]);
             unset($Announcements['adv'][$id_del]);
-            $B = serialize($Announcements);
-            setcookie('Announcements', $B, time() + 3600 * 24 * 7);
+            rewriting_cookies($Announcements);
             unset($id_del);
             $id_key = "";
             $Location = basename($_SERVER['PHP_SELF']);
@@ -71,7 +75,7 @@ if ($_GET == TRUE) {
 
 
 
-//global $id_key;
+
 
 if ($id_key == null) {
     $seller_name = "";
