@@ -3,21 +3,13 @@
 error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
 ini_set('display_errors', 1);
 header('Content-type: text/html; charset=utf-8');
-//session_start();
-//print_r($_COOKIE["Announcements"]);
-//$Announcements=array();
-//echo basename($_SERVER['PHP_SELF']);
-//echo "<br>";
 
-//print_r($_POST);
-//
 function rewriting_cookies($Announcements) {
     $line_cookie = serialize($Announcements);
     setcookie('Announcements', $line_cookie, time() + 3600 * 24 * 7);
 }
 
-//
-//
+
 //добавленых объявления в массив ссесий
 if ($_POST == TRUE) {
     if ($_GET == TRUE) {
@@ -75,7 +67,18 @@ if ($_GET == TRUE) {
 
 
 
+$location['Новосибирск']='Новосибирск';
+$location['Барабинск']='Барабинск';
+$location['Бердск']='Бердск';
+$location['Искитим']='Искитим';
+$location['Колывань']='Колывань';
 
+$category["Автомобили с пробегом"]="Автомобили с пробегом";
+$category["Новые автомобили"]="Новые автомобили";
+$category['Мотоциклы и мототехника']="Мотоциклы и мототехника";
+$category['Грузовики и спецтехника']='Грузовики и спецтехника';
+$category['Водный транспорт']="Водный транспорт";
+$category['Запчасти и аксессуары']="Запчасти и аксессуары";
 
 if ($id_key == null) {
     $seller_name = "";
@@ -97,7 +100,9 @@ if ($id_key == null) {
     $description = $Announcements['adv'][$id_key]['description'];
     $price = $Announcements['adv'][$id_key]['price'];
 }
+   
 ?>
+
 <form  method="post">
 
     <label><b>Ваше имя </b></label><input type="text" maxlength="40"  value="<?php echo $seller_name; ?>" name="seller_name">
@@ -108,25 +113,25 @@ if ($id_key == null) {
     <br>
     <label>Город</label> 
     <select title="Выберите Ваш город"  name="location_id">
-        <option value="<?php echo $location_id; ?>">-- <?php echo $location_id; ?> --</option>
         <option >-- Города --</option>
-        <option  value="Новосибирск">Новосибирск</option>   
-        <option  value="Барабинск">Барабинск</option>   
-        <option  value="Бердск">Бердск</option>   
-        <option  value="Искитим">Искитим</option>   
-        <option  value="Колывань">Колывань</option>
+        <?php
+        foreach ($location as $value => $city){
+            $selected = ($city == $location_id) ? 'selected=""' : '';
+            echo '<option data-coords=",," '.$selected.' value="'.$value.'">'.$city.'</option>';
+        }
+        ?>
         <option id="select-region" value="0">Выбрать другой...</option> </select> 
     <br>
     <label>Категория</label> 
     <select title="Выберите категорию объявления"  name="category_id" > 
-        <option value="<?php echo $category_id; ?>">-- <?php echo $category_id; ?> --</option>
+        <option >-- категории --</option>
         <optgroup label="Транспорт">
-            <option value="Автомобили с пробегом">Автомобили с пробегом</option>
-            <option value="Новые автомобили">Новые автомобили</option>
-            <option value="Мотоциклы и мототехника">Мотоциклы и мототехника</option>
-            <option value="Грузовики и спецтехника">Грузовики и спецтехника</option>
-            <option value="Водный транспорт">Водный транспорт</option>
-            <option value="Запчасти и аксессуары">Запчасти и аксессуары</option>
+            <?php
+                foreach ($category as $value => $category_typ){
+                    $selected = ($category_typ == $category_id) ? 'selected=""' : '';
+                    echo '<option data-coords=",," '.$selected.' value="'.$value.'">'.$category_typ.'</option>';
+                }
+            ?>
         </optgroup></select>
     <br>
     <label>Название объявления</label> <input type="text" maxlength="50" value="<?php echo $title; ?>" name="title">
