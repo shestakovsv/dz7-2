@@ -17,12 +17,12 @@ if ($_POST == TRUE) {
             if ($key == "id") {
                 $id = $_GET['id'];
                 $Announcements = unserialize($_COOKIE["Announcements"]);
-                $Announcements['adv'][$id] = $_POST;
+                $Announcements[$id] = $_POST;
                 rewriting_cookies($Announcements);
                 $_GET['id'] = "";
             } else {
                 $Announcements = unserialize($_COOKIE["Announcements"]);
-                $Announcements['adv'][] = $_POST;
+                $Announcements[] = $_POST;
                 rewriting_cookies($Announcements);
             }
         }
@@ -30,10 +30,10 @@ if ($_POST == TRUE) {
     } else {
         if (isset($_COOKIE['Announcements'])) {
             $Announcements = unserialize($_COOKIE['Announcements']);
-            $Announcements['adv'][] = $_POST;
+            $Announcements[] = $_POST;
             rewriting_cookies($Announcements);
         } else {
-            $Announcements['adv'][] = $_POST;
+            $Announcements[] = $_POST;
             rewriting_cookies($Announcements);
         }
     }
@@ -52,7 +52,7 @@ if ($_GET == TRUE) {
         if ($key_get == "id_del") {   // удаляем объявление делаем вывод пустой формы 
             $id_del = $_GET['id_del'];
             $Announcements = unserialize($_COOKIE["Announcements"]);
-            unset($Announcements['adv'][$id_del]);
+            unset($Announcements[$id_del]);
             rewriting_cookies($Announcements);
             unset($id_del);
             $id_key = "";
@@ -91,14 +91,14 @@ if ($id_key == null) {
     $price = "0";
 } else {
     $Announcements = unserialize($_COOKIE["Announcements"]);
-    $seller_name = $Announcements['adv'][$id_key]['seller_name'];
-    $email = $Announcements['adv'][$id_key]['email'];
-    $phone = $Announcements['adv'][$id_key]['phone'];
-    $location_id = $Announcements['adv'][$id_key]['location_id'];
-    $category_id = $Announcements['adv'][$id_key]['category_id'];
-    $title = $Announcements['adv'][$id_key]['title'];
-    $description = $Announcements['adv'][$id_key]['description'];
-    $price = $Announcements['adv'][$id_key]['price'];
+    $seller_name = $Announcements[$id_key]['seller_name'];
+    $email = $Announcements[$id_key]['email'];
+    $phone = $Announcements[$id_key]['phone'];
+    $location_id = $Announcements[$id_key]['location_id'];
+    $category_id = $Announcements[$id_key]['category_id'];
+    $title = $Announcements[$id_key]['title'];
+    $description = $Announcements[$id_key]['description'];
+    $price = $Announcements[$id_key]['price'];
 }
    
 ?>
@@ -146,12 +146,12 @@ if ($id_key == null) {
 <?php
 if (isset($_COOKIE['Announcements'])) {
     $Announcements = unserialize($_COOKIE["Announcements"]);
-    foreach ($Announcements['adv'] as $x => $value) {
+    foreach ($Announcements as $x => $value) {
         ?>
-        <a href="<?php echo basename($_SERVER['PHP_SELF']); ?>?id=<?php echo $x; ?>"><?php echo $Announcements['adv'][$x]['title']; ?></a>
+        <a href="<?php echo basename($_SERVER['PHP_SELF']); ?>?id=<?php echo $x; ?>"><?php echo $Announcements[$x]['title']; ?></a>
         <?php
-        echo '|  Цена:' . $Announcements['adv'][$x]['price'] . ' руб.  |';
-        echo $Announcements['adv'][$x]['seller_name'] . '  |';
+        echo '|  Цена:' . $Announcements[$x]['price'] . ' руб.  |';
+        echo $Announcements[$x]['seller_name'] . '  |';
         ?>
         <a href="<?php echo basename($_SERVER['PHP_SELF']); ?>?id_del=<?php echo $x; ?>">Удалить</a>        
         <?php
