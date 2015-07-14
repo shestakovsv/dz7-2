@@ -5,65 +5,52 @@ ini_set('display_errors', 1);
 header('Content-type: text/html; charset=utf-8');
 
 function rewriting_cookies($Announcements) {
-    $line_cookie = serialize($Announcements);
-    setcookie('Announcements', $line_cookie, time() + 3600 * 24 * 7);
+$line_cookie = serialize($Announcements);
+setcookie('Announcements', $line_cookie, time() + 3600 * 24 * 7);
 }
-
+$Location = basename($_SERVER['PHP_SELF']);
+$Announcements = unserialize($_COOKIE["Announcements"]);
 //print_r($_POST);
-
 //добавленых объявления в массив ссесий
 if ($_POST == TRUE) {
-    if ($_GET == TRUE) {
-        foreach ($_GET as $key => $value) { //сохраняем редактированное объявление в форме
-            if ($key == "id") {
-                $id = $_GET['id'];
-                $Announcements = unserialize($_COOKIE["Announcements"]);
-                $Announcements[$id] = $_POST;
-                rewriting_cookies($Announcements);
-                $_GET['id'] = "";
-            } else {
-                $Announcements = unserialize($_COOKIE["Announcements"]);
-                $Announcements[] = $_POST;
-                rewriting_cookies($Announcements);
-            }
-        }
-        unset($_GET['id']);
-    } else {
-        if (isset($_COOKIE['Announcements'])) {
-            $Announcements = unserialize($_COOKIE['Announcements']);
-            $Announcements[] = $_POST;
-            rewriting_cookies($Announcements);
-        } else {
-            $Announcements[] = $_POST;
-            rewriting_cookies($Announcements);
-        }
-    }
-    $Location = basename($_SERVER['PHP_SELF']);
-    header("Location: $Location");
-    exit;
+//$Announcements = unserialize($_COOKIE["Announcements"]);
+if ($_GET == TRUE) {
+if (isset($_GET['id'])) {
+$id = $_GET['id'];
+$Announcements[$id] = $_POST;
+$_GET['id'] = "";
+} else {
+$Announcements[] = $_POST;
+}
+unset($_GET['id']);
+} else {
+if (isset($_COOKIE['Announcements'])) {
+$Announcements[] = $_POST;
+} else {
+$Announcements[] = $_POST;
+}
+}
+rewriting_cookies($Announcements);
+header("Location: $Location");
+exit;
 }
 
 
 if ($_GET == TRUE) {
-
-    foreach ($_GET as $key_get => $value) { // выводим объявление в форме
-        if ($key_get == "id") {
-            $id_key = $_GET['id'];
-        }
-        if ($key_get == "id_del") {   // удаляем объявление делаем вывод пустой формы 
-            $id_del = $_GET['id_del'];
-            $Announcements = unserialize($_COOKIE["Announcements"]);
-            unset($Announcements[$id_del]);
-            rewriting_cookies($Announcements);
-            unset($id_del);
-            $id_key = "";
-            $Location = basename($_SERVER['PHP_SELF']);
-            header("Location: $Location");
-            exit;
-        }
-    }
+if (isset($_GET['id'])) {
+$id_key = $_GET['id'];
+}
+if (isset($_GET['id_del'])) {
+$id_del = $_GET['id_del'];
+unset($Announcements[$id_del]);
+rewriting_cookies($Announcements);
+unset($id_del);
+$id_key = "";
+header("Location: $Location");
+exit;
+}
 } else {
-    $id_key = ""; // пока нет данных выводим пустую форму
+$id_key = ""; // пока нет данных выводим пустую форму
 }
 
 
@@ -85,63 +72,46 @@ $private['Частное лицо'] = "Частное лицо";
 $private['Компания'] = "Компания";
 
 if ($id_key == null) {
-    $seller_name = "";
-    $email = "";
-    $phone = "";
-    $location_id = "Выберите Ваш город";
-    $category_id = "Выберите категорию";
-    $title = "";
-    $description = "";
-    $price = "0";
-    $manager = "";
-    $email = "";
-    $phone = "";
-    $private_checked = 1;
-    $allow_mails = 0;
+$seller_name = "";
+$email = "";
+$phone = "";
+$location_id = "Выберите Ваш город";
+$category_id = "Выберите категорию";
+$title = "";
+$description = "";
+$price = "0";
+$manager = "";
+$email = "";
+$phone = "";
+$private_checked = 1;
+$allow_mails = 0;
 } else {
-    $Announcements = unserialize($_COOKIE["Announcements"]);
-    $seller_name = $Announcements[$id_key]['seller_name'];
-    $email = $Announcements[$id_key]['email'];
-    $phone = $Announcements[$id_key]['phone'];
-    $location_id = $Announcements[$id_key]['location_id'];
-    $category_id = $Announcements[$id_key]['category_id'];
-    $title = $Announcements[$id_key]['title'];
-    $description = $Announcements[$id_key]['description'];
-    $price = $Announcements[$id_key]['price'];
-    $manager = $Announcements[$id_key]['manager'];
-    $email = $Announcements[$id_key]['email'];
-    $phone = $Announcements[$id_key]['phone'];
-    $private_checked = $Announcements[$id_key]['private'];
-    if (isset($Announcements[$id_key]['allow_mails'])) {
-        $allow_mails = $Announcements[$id_key]['allow_mails'];
-    } else {
-        $allow_mails = 0;
-    }
+$seller_name = $Announcements[$id_key]['seller_name'];
+$email = $Announcements[$id_key]['email'];
+$phone = $Announcements[$id_key]['phone'];
+$location_id = $Announcements[$id_key]['location_id'];
+$category_id = $Announcements[$id_key]['category_id'];
+$title = $Announcements[$id_key]['title'];
+$description = $Announcements[$id_key]['description'];
+$price = $Announcements[$id_key]['price'];
+$manager = $Announcements[$id_key]['manager'];
+$email = $Announcements[$id_key]['email'];
+$phone = $Announcements[$id_key]['phone'];
+$private_checked = $Announcements[$id_key]['private'];
+if (isset($Announcements[$id_key]['allow_mails'])) {
+$allow_mails = $Announcements[$id_key]['allow_mails'];
+} else {
+$allow_mails = 0;
 }
+}
+$checked = ($private_checked == 0) ? 'checked = ""' : "";
 ?>
-
-
-
-
-
-
 
 
 <form  method="post">
 
-    <?php
-    if ($private_checked == 1) {
-        echo '<label><input type = "radio" checked = "" value = "1" name = "private">Частное лицо</label>';
-        echo '<label><input type = "radio"  value = "0" name = "private">Компания</label>';
-    } else {
-        echo '<label><input type = "radio"  value = "1" name = "private">Частное лицо</label>';
-        echo '<label><input type = "radio" checked = "" value = "0" name = "private">Компания</label>';
-    }
-    ?>
-
-
-
-
+    <label><input type = "radio" checked = "" value = "1" name = "private">Частное лицо</label>
+    <label><input type = "radio" <?php echo $checked; ?>  value = "0" name = "private">Компания</label>
     <br>
     <label><b>Контактное лицо</b></label> <input type="text" maxlength="40" value="<?php echo $manager; ?>" name="manager">
     <br> 
@@ -161,7 +131,7 @@ if ($id_key == null) {
     <br>
     <label><b>Ваше имя </b></label><input type="text" maxlength="40"  value="<?php echo $seller_name; ?>" name="seller_name">
     <br>  
-    
+
     <label>Номер телефона </label><input type="text" value="<?php echo $phone; ?>" name="phone">
     <br>
     <label>Город</label> 
@@ -199,15 +169,14 @@ if ($id_key == null) {
 <br><br>
 <?php
 if (isset($_COOKIE['Announcements'])) {
-    $Announcements = unserialize($_COOKIE["Announcements"]);
-    foreach ($Announcements as $x => $value) {
+    foreach ($Announcements as $id => $value) {
         ?>
-        <a href="<?php echo basename($_SERVER['PHP_SELF']); ?>?id=<?php echo $x; ?>"><?php echo $Announcements[$x]['title']; ?></a>
+        <a href="<?php echo $Location; ?>?id=<?php echo $id; ?>"><?php echo $Announcements[$id]['title']; ?></a>
         <?php
-        echo '|  Цена:' . $Announcements[$x]['price'] . ' руб.  |';
-        echo $Announcements[$x]['seller_name'] . '  |';
+        echo '|  Цена:' . $Announcements[$id]['price'] . ' руб.  |';
+        echo $Announcements[$id]['seller_name'] . '  |';
         ?>
-        <a href="<?php echo basename($_SERVER['PHP_SELF']); ?>?id_del=<?php echo $x; ?>">Удалить</a>        
+        <a href="<?php echo $Location; ?>?id_del=<?php echo $id; ?>">Удалить</a>        
         <?php
         echo "<br>";
     }
