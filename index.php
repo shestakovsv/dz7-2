@@ -5,52 +5,44 @@ ini_set('display_errors', 1);
 header('Content-type: text/html; charset=utf-8');
 
 function rewriting_cookies($Announcements) {
-$line_cookie = serialize($Announcements);
-setcookie('Announcements', $line_cookie, time() + 3600 * 24 * 7);
+    $line_cookie = serialize($Announcements);
+    setcookie('Announcements', $line_cookie, time() + 3600 * 24 * 7);
 }
+
 $Location = basename($_SERVER['PHP_SELF']);
-$Announcements = unserialize($_COOKIE["Announcements"]);
+$Announcements = (isset($_COOKIE["Announcements"])) ? unserialize($_COOKIE["Announcements"]) : [];
 //print_r($_POST);
 //добавленых объявления в массив ссесий
-if ($_POST == TRUE) {
-//$Announcements = unserialize($_COOKIE["Announcements"]);
-if ($_GET == TRUE) {
-if (isset($_GET['id'])) {
-$id = $_GET['id'];
-$Announcements[$id] = $_POST;
-$_GET['id'] = "";
-} else {
-$Announcements[] = $_POST;
-}
-unset($_GET['id']);
-} else {
-if (isset($_COOKIE['Announcements'])) {
-$Announcements[] = $_POST;
-} else {
-$Announcements[] = $_POST;
-}
-}
-rewriting_cookies($Announcements);
-header("Location: $Location");
-exit;
+if (isset($_POST['main_form_submit'])) {
+    if (isset($_GET['id'])) {
+        $id = $_GET['id'];
+        $Announcements[$id] = $_POST;
+        $_GET['id'] = "";
+        unset($_GET['id']);
+    } else {
+        $Announcements[] = $_POST;
+    }
+    rewriting_cookies($Announcements);
+    header("Location: $Location");
+    exit;
 }
 
 
 if ($_GET == TRUE) {
-if (isset($_GET['id'])) {
-$id_key = $_GET['id'];
-}
-if (isset($_GET['id_del'])) {
-$id_del = $_GET['id_del'];
-unset($Announcements[$id_del]);
-rewriting_cookies($Announcements);
-unset($id_del);
-$id_key = "";
-header("Location: $Location");
-exit;
-}
+    if (isset($_GET['id'])) {
+        $id_key = $_GET['id'];
+    }
+    if (isset($_GET['id_del'])) {
+        $id_del = $_GET['id_del'];
+        unset($Announcements[$id_del]);
+        rewriting_cookies($Announcements);
+        unset($id_del);
+        $id_key = "";
+        header("Location: $Location");
+        exit;
+    }
 } else {
-$id_key = ""; // пока нет данных выводим пустую форму
+    $id_key = ""; // пока нет данных выводим пустую форму
 }
 
 
@@ -72,37 +64,37 @@ $private['Частное лицо'] = "Частное лицо";
 $private['Компания'] = "Компания";
 
 if ($id_key == null) {
-$seller_name = "";
-$email = "";
-$phone = "";
-$location_id = "Выберите Ваш город";
-$category_id = "Выберите категорию";
-$title = "";
-$description = "";
-$price = "0";
-$manager = "";
-$email = "";
-$phone = "";
-$private_checked = 1;
-$allow_mails = 0;
+    $seller_name = "";
+    $email = "";
+    $phone = "";
+    $location_id = "Выберите Ваш город";
+    $category_id = "Выберите категорию";
+    $title = "";
+    $description = "";
+    $price = "0";
+    $manager = "";
+    $email = "";
+    $phone = "";
+    $private_checked = 1;
+    $allow_mails = 0;
 } else {
-$seller_name = $Announcements[$id_key]['seller_name'];
-$email = $Announcements[$id_key]['email'];
-$phone = $Announcements[$id_key]['phone'];
-$location_id = $Announcements[$id_key]['location_id'];
-$category_id = $Announcements[$id_key]['category_id'];
-$title = $Announcements[$id_key]['title'];
-$description = $Announcements[$id_key]['description'];
-$price = $Announcements[$id_key]['price'];
-$manager = $Announcements[$id_key]['manager'];
-$email = $Announcements[$id_key]['email'];
-$phone = $Announcements[$id_key]['phone'];
-$private_checked = $Announcements[$id_key]['private'];
-if (isset($Announcements[$id_key]['allow_mails'])) {
-$allow_mails = $Announcements[$id_key]['allow_mails'];
-} else {
-$allow_mails = 0;
-}
+    $seller_name = $Announcements[$id_key]['seller_name'];
+    $email = $Announcements[$id_key]['email'];
+    $phone = $Announcements[$id_key]['phone'];
+    $location_id = $Announcements[$id_key]['location_id'];
+    $category_id = $Announcements[$id_key]['category_id'];
+    $title = $Announcements[$id_key]['title'];
+    $description = $Announcements[$id_key]['description'];
+    $price = $Announcements[$id_key]['price'];
+    $manager = $Announcements[$id_key]['manager'];
+    $email = $Announcements[$id_key]['email'];
+    $phone = $Announcements[$id_key]['phone'];
+    $private_checked = $Announcements[$id_key]['private'];
+    if (isset($Announcements[$id_key]['allow_mails'])) {
+        $allow_mails = $Announcements[$id_key]['allow_mails'];
+    } else {
+        $allow_mails = 0;
+    }
 }
 $checked = ($private_checked == 0) ? 'checked = ""' : "";
 ?>
