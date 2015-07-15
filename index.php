@@ -10,19 +10,14 @@ function rewriting_cookies($Announcements) {
 }
 
 $Location = basename($_SERVER['PHP_SELF']);
-$Announcements = (isset($_COOKIE["Announcements"])) ? unserialize($_COOKIE["Announcements"]) : "";
+$Announcements = (isset($_COOKIE["Announcements"])) ? unserialize($_COOKIE["Announcements"]) : [];
 //print_r($_POST);
 //добавленых объявления в массив ссесий
 if (isset($_POST['main_form_submit'])) {
-//$Announcements = unserialize($_COOKIE["Announcements"]);
-    if ($_GET == TRUE) {
-        if (isset($_GET['id'])) {
-            $id = $_GET['id'];
-            $Announcements[$id] = $_POST;
-            $_GET['id'] = "";
-        } else {
-            $Announcements[] = $_POST;
-        }
+    if (isset($_GET['id'])) {
+        $id = $_GET['id'];
+        $Announcements[$id] = $_POST;
+        $_GET['id'] = "";
         unset($_GET['id']);
     } else {
         $Announcements[] = $_POST;
