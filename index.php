@@ -163,7 +163,6 @@ $checked = ($private_checked == 0) ? 'checked = ""' : "";
 <br><br>
 <?php
 if (isset($Announcements)) {
-
     foreach ($Announcements as $id => $value) {
         ?>
         <a href="<?php echo $Location; ?>?id=<?php echo $id; ?>"><?php echo $Announcements[$id]['title']; ?></a>
