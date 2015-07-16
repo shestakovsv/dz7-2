@@ -4,15 +4,14 @@ error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
 ini_set('display_errors', 1);
 header('Content-type: text/html; charset=utf-8');
 
-function rewriting_cookies($Announcements) {
-    $line_cookie = serialize($Announcements);
-    setcookie('Announcements', $line_cookie, time() + 3600 * 24 * 7);
-}
+
 
 $Location = basename($_SERVER['PHP_SELF']);
-$Announcements = (isset($_COOKIE["Announcements"])) ? unserialize($_COOKIE["Announcements"]) : [];
-//print_r($_POST);
-//добавленых объявления в массив ссесий
+$Announcements = unserialize(file_get_contents('./Ann.txt'));
+print_r($Announcements);
+
+
+//добавленых объявления в массив
 if (isset($_POST['main_form_submit'])) {
     if (isset($_GET['id'])) {
         $id = $_GET['id'];
@@ -22,7 +21,9 @@ if (isset($_POST['main_form_submit'])) {
     } else {
         $Announcements[] = $_POST;
     }
-    rewriting_cookies($Announcements);
+    print_r($Announcements);
+    $Announcements_serialize = serialize($Announcements);
+    file_put_contents('./Ann.txt', $Announcements_serialize);
     header("Location: $Location");
     exit;
 }
@@ -35,7 +36,8 @@ if ($_GET == TRUE) {
     if (isset($_GET['id_del'])) {
         $id_del = $_GET['id_del'];
         unset($Announcements[$id_del]);
-        rewriting_cookies($Announcements);
+        $Announcements_serialize = serialize($Announcements);
+        file_put_contents('./Ann.txt', $Announcements_serialize);
         unset($id_del);
         $id_key = "";
         header("Location: $Location");
@@ -160,7 +162,8 @@ $checked = ($private_checked == 0) ? 'checked = ""' : "";
 
 <br><br>
 <?php
-if (isset($_COOKIE['Announcements'])) {
+if (isset($Announcements)) {
+
     foreach ($Announcements as $id => $value) {
         ?>
         <a href="<?php echo $Location; ?>?id=<?php echo $id; ?>"><?php echo $Announcements[$id]['title']; ?></a>
