@@ -7,9 +7,29 @@ header('Content-type: text/html; charset=utf-8');
 
 
 $Location = basename($_SERVER['PHP_SELF']);
-$Announcements = unserialize(file_get_contents('./Ann.txt'));
-print_r($Announcements);
 
+$filename = './Ann.txt';
+
+
+if (file_exists($filename)) {
+    $temp_str = file_get_contents('./Ann.txt');
+    var_dump($temp_str);
+    if (isset($temp_str)) {
+        $Announcements = unserialize(file_get_contents('./Ann.txt')); // действие в случае удачи
+    } else {
+        exit('Ошибка чтения файла'); // или другое действие при неудачном чтении файла
+    }
+} else {
+    $Announcements = fopen('./Ann.txt', 'w+');
+    $Announcements = '';
+}
+
+function Announcements_serialize($Announcements) {
+    $Announcements_serialize = serialize($Announcements);
+    if (!file_put_contents('./Ann.txt', $Announcements_serialize)) {
+        exit('Ошибка записи файла');
+    }
+}
 
 //добавленых объявления в массив
 if (isset($_POST['main_form_submit'])) {
@@ -21,9 +41,8 @@ if (isset($_POST['main_form_submit'])) {
     } else {
         $Announcements[] = $_POST;
     }
-    print_r($Announcements);
-    $Announcements_serialize = serialize($Announcements);
-    file_put_contents('./Ann.txt', $Announcements_serialize);
+    //print_r($Announcements);
+    Announcements_serialize($Announcements);
     header("Location: $Location");
     exit;
 }
@@ -36,8 +55,7 @@ if ($_GET == TRUE) {
     if (isset($_GET['id_del'])) {
         $id_del = $_GET['id_del'];
         unset($Announcements[$id_del]);
-        $Announcements_serialize = serialize($Announcements);
-        file_put_contents('./Ann.txt', $Announcements_serialize);
+        Announcements_serialize($Announcements);
         unset($id_del);
         $id_key = "";
         header("Location: $Location");
@@ -162,7 +180,8 @@ $checked = ($private_checked == 0) ? 'checked = ""' : "";
 
 <br><br>
 <?php
-if (isset($Announcements)) {
+//    if (isset($Announcements)) {empty($var)
+if (!empty($Announcements)) {
     foreach ($Announcements as $id => $value) {
         ?>
         <a href="<?php echo $Location; ?>?id=<?php echo $id; ?>"><?php echo $Announcements[$id]['title']; ?></a>
@@ -177,4 +196,5 @@ if (isset($Announcements)) {
 }
 
 
-      
+
+    
