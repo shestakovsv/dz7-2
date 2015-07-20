@@ -13,7 +13,7 @@ $filename = './Ann.txt';
 
 if (file_exists($filename)) {
     $temp_str = file_get_contents('./Ann.txt');
-    var_dump($temp_str);
+    //var_dump($temp_str);
     if (isset($temp_str)) {
         $Announcements = unserialize(file_get_contents('./Ann.txt')); // действие в случае удачи
     } else {
