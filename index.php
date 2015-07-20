@@ -20,8 +20,7 @@ if (file_exists($filename)) {
         exit('Ошибка чтения файла'); // или другое действие при неудачном чтении файла
     }
 } else {
-    $Announcements = fopen('./Ann.txt', 'w+');
-    $Announcements = '';
+    $Announcements = [];
 }
 
 function Announcements_serialize($Announcements) {
